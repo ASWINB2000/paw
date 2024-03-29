@@ -2,6 +2,8 @@ package com.paw.model;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -44,13 +46,16 @@ public class Dog {
     
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "breed_id")
+    @JsonIgnore 
     private Breed breed;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id")
+    @JsonIgnore 
     private Users users;
 
     @OneToOne(mappedBy = "dog", fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @JsonIgnore 
     private Adoption adoption;
 
 	public Dog() {

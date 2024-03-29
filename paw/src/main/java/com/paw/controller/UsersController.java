@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.paw.model.Users;
@@ -23,7 +22,6 @@ import com.paw.service.UsersService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/users")
 public class UsersController {
 
     private final UsersService usersService;
@@ -33,13 +31,13 @@ public class UsersController {
         this.usersService = usersService;
     }
 
-    @GetMapping
+    @GetMapping("/users")
     public ResponseEntity<List<Users>> getAllUsers() {
         List<Users> usersList = usersService.findAll();
         return ResponseEntity.ok(usersList);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("users/{id}")
     public ResponseEntity<Users> getUserById(@PathVariable("id") Long id) {
         Users user = usersService.findById(id);
         if (user != null) {
@@ -50,7 +48,7 @@ public class UsersController {
     }
 
 
-    @PostMapping
+    @PostMapping("/userAdd")
     public ResponseEntity<?> createUser(@Valid @RequestBody Users user, BindingResult result) {
         // Validate user object using @Valid annotation and handle validation errors
         if (result.hasErrors()) {
@@ -75,7 +73,7 @@ public class UsersController {
     }
 
 
-    @PutMapping("/{id}")
+    @PutMapping("/userUpdate/{id}")
     public ResponseEntity<Users> updateUser(@PathVariable("id") Long id, @RequestBody Users user) {
         Users existingUser = usersService.findById(id);
         if (existingUser != null) {
@@ -87,7 +85,7 @@ public class UsersController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/userDelete/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) {
         Users user = usersService.findById(id);
         if (user != null) {
