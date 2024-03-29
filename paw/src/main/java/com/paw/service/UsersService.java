@@ -13,7 +13,7 @@ import com.paw.repository.UsersRepos;
 public class UsersService {
 	private  UsersRepos usersRepository;
 
-//    @Autowired
+
     public UsersService(UsersRepos usersRepository) {
         this.usersRepository = usersRepository;
     }
@@ -34,13 +34,14 @@ public class UsersService {
         usersRepository.save(users);
     }
 
-    public Users findById(Integer id) {
-    	for (Users u : usersRepository.findAll()) {
-            if(u.getId().equals(id)) {
-                return u;
-            }
-        }
-        return null;
+    public Users findById(Long id) {
+    	return usersRepository.findById(id).orElse(null);
+//    	for (Users u : usersRepository.findAll()) {
+//            if(u.getId().equals(id)) {
+//                return u;
+//            }
+//        }
+//        return null;
     }
 
     public Users findUserByUsernameAndPassword(String username, String password) {
@@ -81,21 +82,23 @@ public class UsersService {
     }
 
     public boolean findByUsername(String username) {
-    	 for (Users u : usersRepository.findAll()) {
-             if(u.getUsername().equals(username)) {
-                 return true;
-             }
-         }
-         return false;
+    	return usersRepository.existsByUsername(username);
+//    	 for (Users u : usersRepository.findAll()) {
+//             if(u.getUsername().equals(username)) {
+//                 return true;
+//             }
+//         }
+//         return false;
     }
 
     public boolean findByEmail(String email) {
-        for (Users u : usersRepository.findAll()) {
-            if(u.getEmail().equals(email)) {
-                return true;
-            }
-        }
-        return false;
+    	return usersRepository.existsByEmail(email);
+//        for (Users u : usersRepository.findAll()) {
+//            if(u.getEmail().equals(email)) {
+//                return true;
+//            }
+//        }
+//        return false;
     }
 
     public static boolean usernameValidator(String username) {

@@ -1,86 +1,86 @@
 package com.paw.controller;
-
 import java.util.List;
 
-
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 import com.paw.model.Adopter;
+import com.paw.model.Users;
 import com.paw.service.AdopterService;
+import com.paw.service.UsersService;
 
-import jakarta.validation.Valid;
 
 @RestController
 public class AdopterController {
 
     private final AdopterService adopterService;
+    private final UsersService UsersService;
 
-    public AdopterController(AdopterService adopterService) {
+    @Autowired
+    public AdopterController(AdopterService adopterService,UsersService UsersService) {
         this.adopterService = adopterService;
+		this.UsersService = UsersService;
     }
-    
 
-    @GetMapping("/adopters")
+    @GetMapping
     public ResponseEntity<List<Adopter>> getAllAdopters() {
         List<Adopter> adopters = adopterService.findAll();
         return ResponseEntity.ok(adopters);
     }
 
-    @GetMapping("/adopters/{id}")
-    public ResponseEntity<Adopter> getAdopterById(@PathVariable Long id) {
-        return adopterService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    @GetMapping("adopters/{id}")
+    public ResponseEntity<Adopter> getAdopterById(@PathVariable("id") Long id) {
+        Adopter adopter = adopterService.findById(id);
+        if (adopter == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(adopter);
     }
 
-    @PostMapping("/adoptersAdd")
-    public ResponseEntity<Adopter> addAdopter(@RequestBody @Valid Adopter adopter) {
-    	Long userId = adopter.getId();
-    	 if (userId == null) {
-    	        // If userId is not provided in the adopter object, assign a default value
-    	        userId = 1L; // Replace DEFAULT_USER_ID with your desired default value
-    	    }
-    	System.out.println(userId);
-        Adopter savedAdopter = adopterService.save(userId,adopter);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedAdopter);
+    @PostMapping("adopters_add")
+    public ResponseEntity<Adopter> createAdopter(@RequestBody Adopter adopter) {
+        Adopter createdAdopter = adopterService.save(adopter);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdAdopter);
+    }
+    
+    @PostMapping("adopters_add/{userId}")
+    public ResponseEntity<Adopter> createAdopter(@PathVariable("userId") Long userId, @RequestBody Adopter adopter) {
+        // Retrieve the user object based on the provided user ID
+        Users user = UsersService.findById(userId);
+        
+        // Check if the user exists
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        // Associate the adopter with the user
+        adopter.setUsers(user);
+        
+        // Save the adopter
+        Adopter createdAdopter = adopterService.save(adopter);
+        
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdAdopter);
+    }
+    
+    @PutMapping("adopter_update/{id}")
+    public ResponseEntity<Adopter> updateAdopter(@PathVariable("id") Long id, @RequestBody Adopter adopter) {
+        Adopter existingAdopter = adopterService.findById(id);
+        if (existingAdopter == null) {
+            return ResponseEntity.notFound().build();
+        }
+        adopter.setId(id);
+        Adopter updatedAdopter = adopterService.save(adopter);
+        return ResponseEntity.ok(updatedAdopter);
     }
 
-    @PutMapping("/adoptersUpdate/{id}")
-    public ResponseEntity<Adopter> updateAdopter(@PathVariable Long id, @RequestBody @Valid Adopter adopter) {
-        return adopterService.findById(id)
-                .map(existingAdopter -> {
-                    existingAdopter.setId(id); // Ensure the ID matches the path variable
-                    // Assuming user ID is retrievable from the adopter object or from the authentication context
-                    Long userId = existingAdopter.getId(); // Adjust this according to your actual implementation
-                    Adopter updatedAdopter = adopterService.save(userId, existingAdopter);
-                    return ResponseEntity.ok(updatedAdopter);
-                })
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-
-
-    @DeleteMapping("/adoptersDelete/{id}")
-    public ResponseEntity<Void> deleteAdopter(@PathVariable Long id) {
-        if (!adopterService.findById(id).isPresent()) {
+    @DeleteMapping("adopters_delete/{id}")
+    public ResponseEntity<Void> deleteAdopter(@PathVariable("id") Long id) {
+        Adopter existingAdopter = adopterService.findById(id);
+        if (existingAdopter == null) {
             return ResponseEntity.notFound().build();
         }
         adopterService.deleteById(id);
         return ResponseEntity.noContent().build();
-    }
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        return ResponseEntity.badRequest().body(ex.getBindingResult().getAllErrors());
     }
 }

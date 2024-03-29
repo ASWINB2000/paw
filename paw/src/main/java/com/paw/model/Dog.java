@@ -47,7 +47,7 @@ public class Dog {
     private Breed breed;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    @JoinColumn(name = "user_id" ,nullable = false)
+    @JoinColumn(name = "user_id")
     private Users users;
 
     @OneToOne(mappedBy = "dog", fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
