@@ -62,18 +62,30 @@ public class AdopterController {
         
         return ResponseEntity.status(HttpStatus.CREATED).body(createdAdopter);
     }
-    
-    @PutMapping("adopter_update/{id}")
+    @PutMapping("/adopters_update/{id}")
     public ResponseEntity<Adopter> updateAdopter(@PathVariable("id") Long id, @RequestBody Adopter adopter) {
         Adopter existingAdopter = adopterService.findById(id);
         if (existingAdopter == null) {
             return ResponseEntity.notFound().build();
         }
-        adopter.setId(id);
-        Adopter updatedAdopter = adopterService.save(adopter);
+
+        // Retrieve the user object based on the existing user ID
+        Users user = UsersService.findById(existingAdopter.getUsers().getId());
+
+        // Update adopter details
+        if (adopter.getName() != null) {
+            existingAdopter.setName(adopter.getName());
+        }
+        // Update other fields as needed
+
+        // Set the existing user back to the adopter object
+        existingAdopter.setUsers(user);
+
+        // Save the updated adopter
+        Adopter updatedAdopter = adopterService.save(existingAdopter);
+
         return ResponseEntity.ok(updatedAdopter);
     }
-
     @DeleteMapping("adopters_delete/{id}")
     public ResponseEntity<Void> deleteAdopter(@PathVariable("id") Long id) {
         Adopter existingAdopter = adopterService.findById(id);

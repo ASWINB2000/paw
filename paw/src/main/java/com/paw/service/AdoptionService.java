@@ -12,10 +12,10 @@ import com.paw.repository.AdoptionRepos;
 public class AdoptionService {
 	
 	private  AdoptionRepos adoptionRepository;
-//	@Autowired
-//	public AdoptionService(AdoptionRepos adoptionRepository) {
-//		this.adoptionRepository=adoptionRepository;
-//	}
+	@Autowired
+	public AdoptionService(AdoptionRepos adoptionRepository) {
+		this.adoptionRepository=adoptionRepository;
+	}
 	
 	public List<Adoption> findAll() {
         return adoptionRepository.findAll();

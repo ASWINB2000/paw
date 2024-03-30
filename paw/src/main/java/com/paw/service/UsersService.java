@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.paw.model.Users;
 import com.paw.repository.UsersRepos;
@@ -43,6 +46,11 @@ public class UsersService {
 //        }
 //        return null;
     }
+    public Users findByIdOrThrow(Long id) {
+        return usersRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+    }
+    // this is added so we can properly use @PostMapping("/dogs/{breed_id}/{user_id}") to throw errors while using postman
 
     public Users findUserByUsernameAndPassword(String username, String password) {
     	for (Users u : usersRepository.findAll()) {
@@ -115,4 +123,11 @@ public class UsersService {
         String pattern = "^(.+)@(.+)$";
         return email.matches(pattern);
     }
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+	public class ResourceNotFoundException extends RuntimeException {
+	    public ResourceNotFoundException(String message) {
+	        super(message);
+	    }
+
+	}
 }

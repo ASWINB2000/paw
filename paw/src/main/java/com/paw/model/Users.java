@@ -4,6 +4,7 @@ package com.paw.model;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -56,9 +57,11 @@ public class Users {
     private String lastName = "";
     
     @OneToMany(mappedBy = "users", cascade = CascadeType.MERGE)
+    @JsonIgnore
     private Set<Dog> dog;
 
     @OneToMany(mappedBy = "users", cascade = CascadeType.MERGE)
+    @JsonIgnore 
     private Set<Adopter> adopter;
     
 
