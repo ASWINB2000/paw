@@ -2,6 +2,8 @@ package com.paw.model;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,7 +14,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
+
 
 
 @Entity
@@ -21,8 +23,9 @@ public class Adoption {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@NotNull(message="Adoption Date is required")
+//	@NotNull(message="Adoption Date is required")
 	@Column(name="adoption_on",nullable=false)
+	@CreationTimestamp
 	private LocalDateTime adoptionDate;
 	
 	@ManyToOne(cascade = CascadeType.MERGE, optional = false)
@@ -70,6 +73,11 @@ public class Adoption {
 	public void setDog(Dog dog) {
 		this.dog = dog;
 	}
+
+	public Adoption() {
+		
+	}
+	
 	
 	
 }

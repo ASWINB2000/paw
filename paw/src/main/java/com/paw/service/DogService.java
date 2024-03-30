@@ -42,4 +42,8 @@ public class DogService {
 		return dogRepository.findById(id);
 
 	}
+
+	public Optional<Dog> findById(Long dogId) {
+		return dogRepository.findById(dogId);
+	}
 }

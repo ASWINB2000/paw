@@ -1,6 +1,7 @@
 package com.paw.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,4 +33,13 @@ public class AdoptionService {
     public void delete(Long id) {
         adoptionRepository.deleteById(id);
     }
+
+	public List<Adoption> findByAdopterNameContainsIgnoreCase(String name) {
+		return adoptionRepository.findByAdopter_NameContainsIgnoreCase(name);
+	}
+	public Optional<Adoption> findById(Long id) {
+		return adoptionRepository.findById(id);
+	}
+
+	
 }
