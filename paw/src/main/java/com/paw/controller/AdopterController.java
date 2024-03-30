@@ -94,5 +94,7 @@ public class AdopterController {
         }
         adopterService.deleteById(id);
         return ResponseEntity.noContent().build();
+       
     }
+    
 }
