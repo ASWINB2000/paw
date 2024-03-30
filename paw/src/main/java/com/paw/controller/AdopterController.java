@@ -92,7 +92,7 @@ public class AdopterController {
         if (existingAdopter == null) {
             return ResponseEntity.notFound().build();
         }
-        System.out.println("hi");
+        
         adopterService.deleteById(id);
         return ResponseEntity.noContent().build();
        
