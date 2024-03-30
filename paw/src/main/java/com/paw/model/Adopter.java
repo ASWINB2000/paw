@@ -131,6 +131,8 @@ public class Adopter {
 	public void setUsers(Users users) {
 		this.users = users;
 	}
+
+	
 	
 	
 	
