@@ -23,13 +23,13 @@ public class AdopterController {
 		this.UsersService = UsersService;
     }
 
-    @GetMapping
+    @GetMapping("/adopters")
     public ResponseEntity<List<Adopter>> getAllAdopters() {
         List<Adopter> adopters = adopterService.findAll();
         return ResponseEntity.ok(adopters);
     }
 
-    @GetMapping("adopters/{id}")
+    @GetMapping("/adopters/{id}")
     public ResponseEntity<Adopter> getAdopterById(@PathVariable("id") Long id) {
         Adopter adopter = adopterService.findById(id);
         if (adopter == null) {
@@ -38,13 +38,13 @@ public class AdopterController {
         return ResponseEntity.ok(adopter);
     }
 
-    @PostMapping("adopters_add")
+    @PostMapping("/adopters_add")
     public ResponseEntity<Adopter> createAdopter(@RequestBody Adopter adopter) {
         Adopter createdAdopter = adopterService.save(adopter);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdAdopter);
     }
     
-    @PostMapping("adopters_add/{userId}")
+    @PostMapping("/adopters_add/{userId}")
     public ResponseEntity<Adopter> createAdopter(@PathVariable("userId") Long userId, @RequestBody Adopter adopter) {
         // Retrieve the user object based on the provided user ID
         Users user = UsersService.findById(userId);
@@ -86,7 +86,7 @@ public class AdopterController {
 
         return ResponseEntity.ok(updatedAdopter);
     }
-    @DeleteMapping("adopters_delete/{id}")
+    @DeleteMapping("/adopters_delete/{id}")
     public ResponseEntity<Void> deleteAdopter(@PathVariable("id") Long id) {
         Adopter existingAdopter = adopterService.findById(id);
         if (existingAdopter == null) {
