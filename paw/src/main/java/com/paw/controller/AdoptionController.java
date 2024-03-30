@@ -74,7 +74,7 @@ public class AdoptionController {
 //        Adoption updatedAdoption = adoptionService.update(adoption);
 //        return ResponseEntity.ok(updatedAdoption);
 //    }
-    //adoption controller actually does not an update method as adoption is basically a log where you either make an adoption or you delete it.
+//adoption controller actually does not an update method as adoption is basically a log where you either make an adoption or you delete it.
 
     @DeleteMapping("/adoptions_delete/{id}")
     public ResponseEntity<Void> deleteAdoption(@PathVariable Long id) {
