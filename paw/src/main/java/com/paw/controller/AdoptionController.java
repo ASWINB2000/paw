@@ -57,6 +57,7 @@ public class AdoptionController {
         Adoption adoption = new Adoption();
         adoption.setAdopter(adopter);
         adoption.setDog(dog);
+        adoption.setName(adopter.getName());
 
         Adoption addedAdoption = adoptionService.add(adoption);
         return new ResponseEntity<>(addedAdoption, HttpStatus.CREATED);

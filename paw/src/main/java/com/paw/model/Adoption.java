@@ -35,6 +35,8 @@ public class Adoption {
 	@OneToOne(cascade = CascadeType.MERGE, optional = false)
     @JoinColumn(name = "dog_id", nullable = false, unique = true)
     private Dog dog;
+	@Column(name="adopter_name")
+	private String name;
 
 	 public Adoption(LocalDateTime adoptionDate, Adopter adopter, Dog dog) {
          this.adoptionDate = adoptionDate;
@@ -73,10 +75,20 @@ public class Adoption {
 	public void setDog(Dog dog) {
 		this.dog = dog;
 	}
+	
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
 	public Adoption() {
 		
 	}
+	
 	
 	
 	
