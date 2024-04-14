@@ -1,11 +1,7 @@
 package com.paw.model;
-
-
-
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,8 +17,8 @@ import jakarta.validation.constraints.Size;
 
 
 @Entity
-@Table(name = "users")
-public class Users {
+@Table(name = "user")
+public class User {
 	@Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name = "id")
@@ -40,7 +36,7 @@ public class Users {
     @Size(min = 4)
     private String password = "";
 
-    @Email
+//    @Email
     @NotNull
     @NotEmpty
     @Column(name = "email", unique = true)
@@ -56,28 +52,30 @@ public class Users {
     @Column(name = "last_name")
     private String lastName = "";
     
-    @OneToMany(mappedBy = "users", cascade = CascadeType.MERGE)
+    private String role;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
     @JsonIgnore
     private Set<Dog> dog;
 
-    @OneToMany(mappedBy = "users", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
     @JsonIgnore 
     private Set<Adopter> adopter;
     
 
-	public Users() {
-		
+	public User() {
+		super();
 	}
-    public Users(@NotNull @NotEmpty String username,
+    public User(@NotNull @NotEmpty String username,
             @NotNull @NotEmpty String password,
             @Email @NotNull @NotEmpty String email,
             @NotNull @NotEmpty String firstName,
-            @NotNull @NotEmpty String lastName) {
+            @NotNull @NotEmpty String lastName,String role) {
     this.username = username;
     this.password = password;
     this.email = email;
     this.firstName = firstName;
     this.lastName = lastName;
+    this.role=role;
 }
 
 	public Long getId() {
@@ -143,13 +141,22 @@ public class Users {
 	public void setAdopter(Set<Adopter> adopter) {
 		this.adopter = adopter;
 	}
-	@Override
-	public String toString() {
-		return "Users [id=" + id + ", username=" + username + ", password=" + password + ", email=" + email
-				+ ", firstName=" + firstName + ", lastName=" + lastName + "]";
-	}
+	
 	
 
+	public String getRole() {
+		return role;
+	}
+	public void setRole(String role) {
+		this.role = role;
+	}
+	
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", email=" + email
+				+ ", firstName=" + firstName + ", lastName=" + lastName + ", role=" + role + ", dog=" + dog
+				+ ", adopter=" + adopter + "]";
+	}
 	@Override
     public boolean equals(Object o) {
 
@@ -157,11 +164,11 @@ public class Users {
             return true;
         }
 
-        if (!(o instanceof Users)) {
+        if (!(o instanceof User)) {
             return false;
         }
 
-        Users u = (Users) o;
+        User u = (User) o;
 
         return this.getId().equals(u.getId());
     }
