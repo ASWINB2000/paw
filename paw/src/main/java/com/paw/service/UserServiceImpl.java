@@ -28,7 +28,8 @@ public class UserServiceImpl implements UserService {
 	        if (role == null || role.isEmpty()) {
 	            role = DEFAULT_ROLE;
 	        }
-		User user=new User(userDto.getEmail(),userDto.getUsername() ,passwordEncoder.encode(userDto.getPassword()) ,role,userDto.getFirst_name(),userDto.getLast_name());
+	        User user = new User(userDto.getUsername(), passwordEncoder.encode(userDto.getPassword()), userDto.getEmail(),
+                    userDto.getFirst_name(), userDto.getLast_name(), role);
 		return rep.save(user);
 	}
 	@Override
