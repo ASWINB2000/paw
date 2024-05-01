@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,10 +16,17 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.Data;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 
 @Entity
 @Table(name = "dog")
+@Data
+@Builder
+@AllArgsConstructor
+
 public class Dog {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,9 +48,13 @@ public class Dog {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "location", nullable = false)
+    @Column(name = "location", nullable = true)
     private String location;
     
+    @Column(name="type")
+    private String type;
+    @Column(name="file_path")
+    private String filePath;
     
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "breed_id")
@@ -62,13 +74,16 @@ public class Dog {
 
 	}
 
-	public Dog(String name, LocalDate birthDate, String gender, String colour, String description, String location) {
+	public Dog(String name, LocalDate birthDate, String gender, String colour, String description, String location,
+			String type,String filePath) {
 		this.name = name;
 		this.birthDate = birthDate;
 		this.gender = gender;
 		this.colour = colour;
 		this.description = description;
 		this.location = location;
+		this.type=type;
+		this.filePath=filePath;
 	}
 
 	public Long getId() {
@@ -150,6 +165,8 @@ public class Dog {
 	public void setAdoption(Adoption adoption) {
 		this.adoption = adoption;
 	}
+
+
 	
 	
     
