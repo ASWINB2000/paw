@@ -1,5 +1,6 @@
 package com.paw.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -12,7 +13,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import com.paw.model.Breed;
 import com.paw.model.Dog;
@@ -41,35 +44,38 @@ public class DogController {
         List<Dog> dogs = dogService.getAllDogs(); // Updated method call
         return ResponseEntity.ok(dogs);
     }
-
+    
+    
     @GetMapping("/dogs/{id}")
-    public ResponseEntity<Dog> getDogById(@PathVariable Long id) {
+    public ResponseEntity<Dog> getDogById(@PathVariable Long id,@PathVariable String fileName) throws IOException {
+    	byte[] imageData=dogService.downloadImage(fileName);
         return dogService.getDogById(id) // Implement this method in DogService
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-
-//    @PostMapping("/dogs")
-//    public ResponseEntity<Dog> addDog(@RequestBody @Valid Dog dog) {
-//        Dog savedDog = dogService.addDog(dog); // Updated method call
-//        return ResponseEntity.status(HttpStatus.CREATED).body(savedDog);
-//    }
+    
+   
     @PostMapping("/dogs/{breed_id}/{user_id}")
-    public ResponseEntity<Dog> addDog(@RequestBody @Valid Dog dog,@PathVariable Long breed_id,@PathVariable Long user_id) {
+    public ResponseEntity<Dog> addDog(@Valid Dog dog,@PathVariable Long breed_id,@PathVariable Long user_id,@RequestParam("image")MultipartFile file,
+    		@RequestParam(value="location",required=false)String location) throws IOException {
     	 // Retrieve the Breed and User objects based on the provided IDs
+    	System.out.println("Location value received: " + dog.getLocation());
     	Breed breed = BreedService.getBreedbyId(breed_id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Breed not found with id: " + breed_id));
-    	
-    	Users user = UsersService.findByIdOrThrow(user_id);
-
-        
+  
+    	Users user = UsersService.findByIdOrThrow(user_id);  
         // Set the retrieved Breed and User objects to the Dog
         dog.setBreed(breed);
         dog.setUsers(user);
+        if (location != null) {
+            dog.setLocation(location);
+        }
+        
         Dog savedDog = dogService.addDog(dog); // Updated method call
+        String uploadImage=dogService.uploadImage(file,savedDog.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(savedDog);
+        
     }
-    
     
 
     @PutMapping("/dogs/{id}")
