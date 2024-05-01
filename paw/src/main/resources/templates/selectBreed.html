@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Breeds</title>
+    <!-- Add any necessary CSS styles here -->
+</head>
+<body>
+    <h1>Select Breeds</h1>
+    
+    <form id="breedForm" action="/dog" method="get">
+        <label for="breed">Choose a breed:</label>
+        <select id="breed" name="breed_id">
+            <!-- Loop through breeds and display options -->
+            <option value="">Select a breed</option>
+            <th:block th:each="breed : ${breeds}">
+                <option th:value="${breed.id}" th:text="${breed.name}"></option>
+            </th:block>
+        </select>
+        
+        <!-- Hidden field to store the user_id -->
+        <input type="hidden" id="user_id" name="user_id" th:value="${user_id}">
+        
+        <!-- Continue button to proceed to the add dog page -->
+        <button type="submit">Continue</button>
+    </form>
+    
+    <!-- Add any other content or styling as needed -->
+</body>
+</html>

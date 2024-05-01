@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -47,12 +47,13 @@
         <h2>Welcome, [[${user.getFirstname()}]]</h2>
         
         <span sec:authorize="isAuthenticated">
-        <a th:href="@{/logout}">
-         Logout
-        
-        </a>
-        
+            <a th:href="@{/logout}">Logout</a>
         </span>
+
+        <!-- Add link to dog.html -->
+        <a th:href="@{'/selectBreed/' + ${user.getId()}}">Add Dog</a>
+
+
 
     </div>
 </body>

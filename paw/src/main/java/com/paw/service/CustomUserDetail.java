@@ -23,6 +23,10 @@ public class CustomUserDetail implements UserDetails {
 		return List.of(() -> user.getRole());
 	}
 	
+	public Long getId() {
+		return user.getId();
+	}
+	
 	public String getFirstname() {
 		return user.getFirstName();
 	}
