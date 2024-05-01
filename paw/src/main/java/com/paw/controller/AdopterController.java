@@ -1,26 +1,27 @@
 package com.paw.controller;
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.paw.model.Adopter;
-import com.paw.model.Users;
+import com.paw.model.User;
 import com.paw.service.AdopterService;
-import com.paw.service.UsersService;
+import com.paw.service.UserService;
 
 
 @RestController
 public class AdopterController {
 
     private final AdopterService adopterService;
-    private final UsersService UsersService;
+    private final UserService UserService;
 
     @Autowired
-    public AdopterController(AdopterService adopterService,UsersService UsersService) {
+    public AdopterController(AdopterService adopterService,UserService UserService) {
         this.adopterService = adopterService;
-		this.UsersService = UsersService;
+		this.UserService = UserService;
     }
 
     @GetMapping("/adopters")
@@ -47,7 +48,7 @@ public class AdopterController {
     @PostMapping("/adopters_add/{userId}")
     public ResponseEntity<Adopter> createAdopter(@PathVariable("userId") Long userId, @RequestBody Adopter adopter) {
         // Retrieve the user object based on the provided user ID
-        Users user = UsersService.findById(userId);
+        User user = UserService.findById(userId);
         
         // Check if the user exists
         if (user == null) {
@@ -55,7 +56,7 @@ public class AdopterController {
         }
         
         // Associate the adopter with the user
-        adopter.setUsers(user);
+        adopter.setUser(user);
         
         // Save the adopter
         Adopter createdAdopter = adopterService.save(adopter);
@@ -70,7 +71,7 @@ public class AdopterController {
         }
 
         // Retrieve the user object based on the existing user ID
-        Users user = UsersService.findById(existingAdopter.getUsers().getId());
+        User user = UserService.findById(existingAdopter.getUser().getId());
 
         // Update adopter details
         if (adopter.getName() != null) {
@@ -79,7 +80,7 @@ public class AdopterController {
         // Update other fields as needed
 
         // Set the existing user back to the adopter object
-        existingAdopter.setUsers(user);
+        existingAdopter.setUser(user);
 
         // Save the updated adopter
         Adopter updatedAdopter = adopterService.save(existingAdopter);

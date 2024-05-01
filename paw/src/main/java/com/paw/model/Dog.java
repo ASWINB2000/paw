@@ -52,7 +52,7 @@ public class Dog {
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id")
     @JsonIgnore 
-    private Users users;
+    private User user;
 
     @OneToOne(mappedBy = "dog", fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JsonIgnore 
@@ -135,12 +135,12 @@ public class Dog {
 		this.breed = breed;
 	}
 
-	public Users getUsers() {
-		return users;
+	public User getUser() {
+		return user;
 	}
 
-	public void setUsers(Users users) {
-		this.users = users;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	public Adoption getAdoption() {

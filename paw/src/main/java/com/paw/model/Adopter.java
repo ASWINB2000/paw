@@ -2,6 +2,7 @@ package com.paw.model;
 
 import java.time.LocalDate;
 
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -53,7 +54,7 @@ public class Adopter {
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id", nullable = false)
-	private Users users;
+	private User user;
 
 	public Adopter() {
 		
@@ -124,12 +125,12 @@ public class Adopter {
 		this.address = address;
 	}
 
-	public Users getUsers() {
-		return users;
+	public User getUser() {
+		return user;
 	}
 
-	public void setUsers(Users users) {
-		this.users = users;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	
