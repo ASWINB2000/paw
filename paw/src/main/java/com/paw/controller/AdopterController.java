@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import com.paw.model.Adopter;
 import com.paw.model.User;
@@ -38,7 +39,17 @@ public class AdopterController {
         }
         return ResponseEntity.ok(adopter);
     }
+    
+    @GetMapping("/adopter/{userId}")
+    public String adopter(@PathVariable("userId") Long userId, Model model) {
+        // Pass the user ID to the adopter.html template
+        model.addAttribute("userId", userId);
+        return "adopter"; // Assuming "adopter.html" is located in the templates directory
+    }
 
+    
+    
+    
     @PostMapping("/adopters_add")
     public ResponseEntity<Adopter> createAdopter(@RequestBody Adopter adopter) {
         Adopter createdAdopter = adopterService.save(adopter);
